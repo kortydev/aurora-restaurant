@@ -77,13 +77,18 @@ export default function BookingForm({ isSubmitting, setIsSubmitting, errorMessag
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/bookings', {
-        name: formData.name,
-        phone: formData.phone,
-        booking_date: formData.date,
-        booking_time: formData.time,
-        guests: parseInt(formData.guests, 10)
-      });
+        // Автоматический выбор адреса: в продакшене шлем на Render, локально — на localhost
+        const API_BASE_URL = import.meta.env.PROD 
+          ? 'https://aurora-backend-1nio.onrender.com/api' 
+          : 'http://localhost:5000/api';
+  
+        const response = await axios.post(`${API_BASE_URL}/bookings`, {
+          name: formData.name,
+          phone: formData.phone,
+          booking_date: formData.date,
+          booking_time: formData.time,
+          guests: parseInt(formData.guests, 10)
+        });
 
       if (response.data.success) {
         navigate('/reservation/success', { state: { booking: response.data.booking } });
