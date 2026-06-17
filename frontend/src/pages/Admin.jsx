@@ -37,12 +37,17 @@ export default function Admin() {
     navigate('/admin');
   };
 
+  // Динамический URL для админки
+  const API_BASE_URL = import.meta.env.PROD 
+    ? 'https://aurora-backend-1nio.onrender.com/api' 
+    : 'http://localhost:5000/api';
+
   // Загрузка бронирований
   const fetchBookings = async () => {
     setLoading(true);
     setErrorMessage('');
     try {
-      const response = await axios.get('http://localhost:5000/api/bookings');
+      const response = await axios.get(`${API_BASE_URL}/bookings`);
       setBookings(response.data);
     } catch (error) {
       console.error('Ошибка при получении бронирований:', error);
@@ -55,7 +60,7 @@ export default function Admin() {
   // Изменение статуса
   const handleStatusChange = async (id, newStatus) => {
     try {
-      const response = await axios.patch(`http://localhost:5000/api/bookings/${id}`, {
+      const response = await axios.patch(`${API_BASE_URL}/bookings/${id}`, {
         status: newStatus
       });
 
